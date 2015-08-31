@@ -23,14 +23,14 @@ type Point [Dim]float64
 
 // Dist computes the Euclidean distance between two points p and q.
 func (p Point) Dist(q Point) float64 {
-	return math.Sqrt(p.Dot(q))
+	dp := p.Sub(q)
+	return math.Sqrt(dp.Dot(dp))
 }
 
-func (p Point) Dot(q point) float64 {
+func (p Point) Dot(q Point) float64 {
 	sum := 0.0
 	for i := range p {
-		dx := p[i] - q[i]
-		sum += dx * dx
+		sum += p[i] * q[i]
 	}
 	return sum
 }
@@ -60,6 +60,14 @@ func (p Point) Scale(a float64) Point {
 		s[i] = a * p[i]
 	}
 	return s
+}
+
+func (p Point) Norm() float64 {
+	return math.Sqrt(p.Dot(p))
+}
+
+func (p Point) Unit() Point {
+	return p.Scale(1/p.Norm())
 }
 
 // minDist computes the square of the distance from a point to a rectangle.
