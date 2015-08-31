@@ -15,7 +15,7 @@ func TestDist(t *testing.T) {
 	p := Point{1, 2, 3}
 	q := Point{4, 5, 6}
 	dist := math.Sqrt(27)
-	if d := p.dist(q); d != dist {
+	if d := p.Dist(q); d != dist {
 		t.Errorf("dist(%v, %v) = %v; expected %v", p, q, d, dist)
 	}
 }
@@ -29,10 +29,10 @@ func TestNewRect(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error on NewRect(%v, %v): %v", p, lengths, err)
 	}
-	if d := p.dist(rect.p); d > EPS {
+	if d := p.Dist(rect.P); d > EPS {
 		t.Errorf("Expected p == rect.p")
 	}
-	if d := q.dist(rect.q); d > EPS {
+	if d := q.Dist(rect.Q); d > EPS {
 		t.Errorf("Expected q == rect.q")
 	}
 }
@@ -74,7 +74,7 @@ func TestContainsPoint(t *testing.T) {
 	rect, _ := NewRect(p, lengths)
 
 	q := Point{4.5, -1.7, 4.8}
-	if yes := rect.containsPoint(q); !yes {
+	if yes := rect.ContainsPoint(q); !yes {
 		t.Errorf("Expected %v contains %v", rect, q)
 	}
 }
@@ -85,7 +85,7 @@ func TestDoesNotContainPoint(t *testing.T) {
 	rect, _ := NewRect(p, lengths)
 
 	q := Point{4.5, -1.7, -3.2}
-	if yes := rect.containsPoint(q); yes {
+	if yes := rect.ContainsPoint(q); yes {
 		t.Errorf("Expected %v doesn't contain %v", rect, q)
 	}
 }
@@ -99,7 +99,7 @@ func TestContainsRect(t *testing.T) {
 	lengths2 := [Dim]float64{3.2, 0.6, 3.7}
 	rect2, _ := NewRect(q, lengths2)
 
-	if yes := rect1.containsRect(&rect2); !yes {
+	if yes := rect1.ContainsRect(&rect2); !yes {
 		t.Errorf("Expected %v.containsRect(%v", rect1, rect2)
 	}
 }
@@ -113,7 +113,7 @@ func TestDoesNotContainRectOverlaps(t *testing.T) {
 	lengths2 := [Dim]float64{3.2, 1.4, 3.7}
 	rect2, _ := NewRect(q, lengths2)
 
-	if yes := rect1.containsRect(&rect2); yes {
+	if yes := rect1.ContainsRect(&rect2); yes {
 		t.Errorf("Expected %v doesn't contain %v", rect1, rect2)
 	}
 }
@@ -127,7 +127,7 @@ func TestDoesNotContainRectDisjoint(t *testing.T) {
 	lengths2 := [Dim]float64{2.2, 5.9, 0.5}
 	rect2, _ := NewRect(q, lengths2)
 
-	if yes := rect1.containsRect(&rect2); yes {
+	if yes := rect1.ContainsRect(&rect2); yes {
 		t.Errorf("Expected %v doesn't contain %v", rect1, rect2)
 	}
 }
@@ -143,7 +143,7 @@ func TestNoIntersection(t *testing.T) {
 
 	// rect1 and rect2 fail to overlap in just one dimension (second)
 
-	if intersect(&rect1, &rect2) {
+	if Intersect(&rect1, &rect2) {
 		t.Errorf("Expected intersect(%v, %v) == false", rect1, rect2)
 	}
 }
@@ -159,7 +159,7 @@ func TestNoIntersectionJustTouches(t *testing.T) {
 
 	// rect1 and rect2 fail to overlap in just one dimension (second)
 
-	if intersect(&rect1, &rect2) {
+	if Intersect(&rect1, &rect2) {
 		t.Errorf("Expected intersect(%v, %v) == nil", rect1, rect2)
 	}
 }
@@ -176,7 +176,7 @@ func TestContainmentIntersection(t *testing.T) {
 	r := Point{1, 2.2, 3.3}
 	s := Point{1.5, 2.7, 3.8}
 
-	if !intersect(&rect1, &rect2) {
+	if !Intersect(&rect1, &rect2) {
 		t.Errorf("intersect(%v, %v) != %v, %v", rect1, rect2, r, s)
 	}
 }
@@ -193,7 +193,7 @@ func TestOverlapIntersection(t *testing.T) {
 	r := Point{1, 4, 3}
 	s := Point{2, 4.5, 3.5}
 
-	if !intersect(&rect1, &rect2) {
+	if !Intersect(&rect1, &rect2) {
 		t.Errorf("intersect(%v, %v) != %v, %v", rect1, rect2, r, s)
 	}
 }
@@ -205,8 +205,8 @@ func TestToRect(t *testing.T) {
 
 	p := Point{3.65, -2.45, -0.05}
 	q := Point{3.75, -2.35, 0.05}
-	d1 := p.dist(rect.p)
-	d2 := q.dist(rect.q)
+	d1 := p.Dist(rect.P)
+	d2 := q.Dist(rect.Q)
 	if d1 > EPS || d2 > EPS {
 		t.Errorf("Expected %v.ToRect(%v) == %v, %v, got %v", x, tol, p, q, rect)
 	}
@@ -225,8 +225,8 @@ func TestBoundingBox(t *testing.T) {
 	s := Point{4.7, 12.6, 8.5}
 
 	bb := boundingBox(&rect1, &rect2)
-	d1 := r.dist(bb.p)
-	d2 := s.dist(bb.q)
+	d1 := r.Dist(bb.P)
+	d2 := s.Dist(bb.Q)
 	if d1 > EPS || d2 > EPS {
 		t.Errorf("boundingBox(%v, %v) != %v, %v, got %v", rect1, rect2, r, s, bb)
 	}
@@ -242,8 +242,8 @@ func TestBoundingBoxContains(t *testing.T) {
 	rect2, _ := NewRect(q, lengths2)
 
 	bb := boundingBox(&rect1, &rect2)
-	d1 := rect1.p.dist(bb.p)
-	d2 := rect1.q.dist(bb.q)
+	d1 := rect1.P.Dist(bb.P)
+	d2 := rect1.Q.Dist(bb.Q)
 	if d1 > EPS || d2 > EPS {
 		t.Errorf("boundingBox(%v, %v) != %v, got %v", rect1, rect2, rect1, bb)
 	}
@@ -276,9 +276,9 @@ func TestMinMaxdist(t *testing.T) {
 	q3 := Point{1, 2, 0}
 
 	// find the closest distance from p to one of these furthest points
-	d1 := p.dist(q1)
-	d2 := p.dist(q2)
-	d3 := p.dist(q3)
+	d1 := p.Dist(q1)
+	d2 := p.Dist(q2)
+	d3 := p.Dist(q3)
 	expected := math.Min(d1*d1, math.Min(d2*d2, d3*d3))
 
 	if d := p.minMaxDist(&r); math.Abs(d-expected) > EPS {

@@ -368,7 +368,7 @@ func (tree *Rtree) findLeaf(n *node, obj Spatial) *node {
 	}
 	// if not leaf, search all candidate subtrees
 	for _, e := range n.entries {
-		if e.bb.containsRect(obj.Bounds()) {
+		if e.bb.ContainsRect(obj.Bounds()) {
 			leaf := tree.findLeaf(e.child, obj)
 			if leaf == nil {
 				continue
@@ -433,7 +433,7 @@ func (tree *Rtree) SearchIntersect(bb *Rect) []Spatial {
 func (tree *Rtree) searchIntersect(n *node, bb *Rect) []Spatial {
 	results := []Spatial{}
 	for _, e := range n.entries {
-		if intersect(e.bb, bb) {
+		if Intersect(e.bb, bb) {
 			if n.leaf {
 				results = append(results, e.obj)
 			} else {

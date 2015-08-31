@@ -198,10 +198,10 @@ func TestSplit(t *testing.T) {
 
 	lbb := l.computeBoundingBox()
 	rbb := r.computeBoundingBox()
-	if lbb.p.dist(expLeft.p) >= EPS || lbb.q.dist(expLeft.q) >= EPS {
+	if lbb.P.Dist(expLeft.P) >= EPS || lbb.Q.Dist(expLeft.Q) >= EPS {
 		t.Errorf("expected left.bb = %s, got %s", expLeft, lbb)
 	}
-	if rbb.p.dist(expRight.p) >= EPS || rbb.q.dist(expRight.q) >= EPS {
+	if rbb.P.Dist(expRight.P) >= EPS || rbb.Q.Dist(expRight.Q) >= EPS {
 		t.Errorf("expected right.bb = %s, got %s", expRight, rbb)
 	}
 }
@@ -282,7 +282,7 @@ func TestAdjustTreeNoPreviousSplit(t *testing.T) {
 
 	e := rt.root.entries[0]
 	p, q := Point{0, 0, 0}, Point{2, 2, 1}
-	if p.dist(e.bb.p) >= EPS || q.dist(e.bb.q) >= EPS {
+	if p.Dist(e.bb.P) >= EPS || q.Dist(e.bb.Q) >= EPS {
 		t.Errorf("Expected adjustTree to fit %v,%v,%v", r00.bb, r01.bb, r10.bb)
 	}
 }
@@ -312,10 +312,10 @@ func TestAdjustTreeNoSplit(t *testing.T) {
 	}
 
 	lbb, rbb := entries[0].bb, entries[1].bb
-	if lbb.p.dist(Point{0, 0}) >= EPS || lbb.q.dist(Point{1, 2, 1}) >= EPS {
+	if lbb.P.Dist(Point{0, 0}) >= EPS || lbb.Q.Dist(Point{1, 2, 1}) >= EPS {
 		t.Errorf("Expected adjustTree to adjust left bb")
 	}
-	if rbb.p.dist(Point{1, 0}) >= EPS || rbb.q.dist(Point{2, 2, 1}) >= EPS {
+	if rbb.P.Dist(Point{1, 0}) >= EPS || rbb.Q.Dist(Point{2, 2, 1}) >= EPS {
 		t.Errorf("Expected adjustTree to adjust right bb")
 	}
 }
@@ -340,10 +340,10 @@ func TestAdjustTreeSplitParent(t *testing.T) {
 	}
 
 	lbb, rbb := retl.entries[0].bb, retr.entries[0].bb
-	if lbb.p.dist(Point{0, 0}) >= EPS || lbb.q.dist(Point{1, 2, 1}) >= EPS {
+	if lbb.P.Dist(Point{0, 0}) >= EPS || lbb.Q.Dist(Point{1, 2, 1}) >= EPS {
 		t.Errorf("Expected left split got left entry")
 	}
-	if rbb.p.dist(Point{1, 0}) >= EPS || rbb.q.dist(Point{2, 2, 1}) >= EPS {
+	if rbb.P.Dist(Point{1, 0}) >= EPS || rbb.Q.Dist(Point{2, 2, 1}) >= EPS {
 		t.Errorf("Expected right split got right entry")
 	}
 }
