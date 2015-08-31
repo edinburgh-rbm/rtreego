@@ -70,6 +70,11 @@ func (p Point) Unit() Point {
 	return p.Scale(1/p.Norm())
 }
 
+// projection of p in the q direction
+func (p Point) Proj(q Point) Point {
+	return q.Unit().Scale(p.Dot(q))
+}
+
 // minDist computes the square of the distance from a point to a rectangle.
 // If the point is contained in the rectangle then the distance is zero.
 //
